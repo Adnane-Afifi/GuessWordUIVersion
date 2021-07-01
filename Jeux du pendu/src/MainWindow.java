@@ -3,6 +3,7 @@ import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 public class MainWindow  extends JFrame {
     private final int m_width = 700;
@@ -69,7 +70,11 @@ public class MainWindow  extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource()==m_B_StartTheGame){
-                    Hangman hagman  = new Hangman();
+                    try {
+                        Hangman hagman  = new Hangman();
+                    } catch (FileNotFoundException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                    }
                 }
             }
         });

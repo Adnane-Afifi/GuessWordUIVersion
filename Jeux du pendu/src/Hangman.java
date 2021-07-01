@@ -15,6 +15,7 @@ public class Hangman extends JFrame {
     private final int  height = 900;
 
     private Game game;
+    File file = new File("/Users/adnaneafifi/Documents/Jeux du pendu/Words/words.txt");
 
 
     private GridBagConstraints GBC;
@@ -24,13 +25,14 @@ public class Hangman extends JFrame {
             "O","P","Q","R","S","T","U","V","W","X","Y","Z"};
     private JButton m_B_keyboard[] = new JButton[26];
 
-    private JLabel wordToGuess = new JLabel("**********");
+    private  String generatedWord =GenerateWord();
+    private JLabel wordToGuess = new JLabel();
 
 
 
 
 
-    Hangman() {
+    Hangman() throws FileNotFoundException {
         setLayout(null);
         Jinstruction.setLayout(null);
         setContentPane(Jinstruction);
@@ -72,8 +74,12 @@ public class Hangman extends JFrame {
 
                   game.setLayout(null);
                   manageVirtualKeyboard();
-                  GuessedWord();
-                  getContentPane().revalidate();
+                    try {
+                        GuessedWord(generatedWord);
+                    } catch (FileNotFoundException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                    }
+                    getContentPane().revalidate();
                   getContentPane().repaint();
                 }
             }
@@ -97,7 +103,8 @@ public class Hangman extends JFrame {
         }
     }
 
-    public void GuessedWord(){
+    public void GuessedWord(String word) throws FileNotFoundException {
+        wordToGuess.setText(HashWord(word).toString());
         wordToGuess.setBounds(width/2-130,height/2-50,100,100);
         wordToGuess.setFont(new Font(Font.MONOSPACED,Font.BOLD,30));
         wordToGuess.setSize(200,200);
@@ -107,12 +114,13 @@ public class Hangman extends JFrame {
     }
     public int NumberOfWords() throws FileNotFoundException {
         int count =0 ;
-        File file = new File("/Users/adnaneafifi/Documents/Jeux du pendu/Words/words.txt");
+
         Scanner read = new Scanner(file);
         while(read.hasNextLine()){
             read.nextLine();
             count++;
         }
+        read.close();
         return count;
 
     }
@@ -122,6 +130,32 @@ public class Hangman extends JFrame {
         int randomNumber =  random.nextInt(NumberOfWords()+1);
         System.out.println(randomNumber);
         return randomNumber;
+    }
+
+    public String GenerateWord() throws FileNotFoundException {
+        int random = generateNumber();
+        int count =0;
+        Scanner read  = new Scanner(file);
+        String word ="";
+        while(read.hasNextLine()){
+            read.nextLine();
+            if(count==random){
+                word=read.nextLine();
+            }
+            count++;
+
+        }
+        read.close();
+        return word;
+
+    }
+
+    public String HashWord(String word) throws FileNotFoundException {
+        StringBuilder hashWord = new StringBuilder();
+        for( int i =0; i<word.length();i++){
+            hashWord.append("*");
+        }
+        return hashWord.toString();
     }
 
     
